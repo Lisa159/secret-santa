@@ -1,134 +1,124 @@
-<div class="form-container">
-  <form [formGroup]="dataForm" (ngSubmit)="sendData()">
-    <div class="data-party">
-      <h2>Datos de la fiesta:</h2>
-      <span class="subtitle"
-        >Introducir el lugar, la fecha y el presupuesto del evento.</span
-      >
-      <div class="data-party__data">
-        <div class="data-party__input-container">
-          <label>Lugar: </label>
-          <input type="text" [formControl]="place" autocomplete="off" />
-          <div
-            *ngIf="place.errors && isValidForm != null && !isValidForm"
-            [ngClass]="'error'"
-          >
-            <div *ngIf="place.errors['required']">Lugar es obligatorio</div>
-            <div *ngIf="place.errors['minlength']">
-              Lugar debe de tener al menos 3 caracteres.
-            </div>
-          </div>
-        </div>
-        <div class="data-party__input-container">
-          <label>Fecha: </label>
-          <input type="date" [formControl]="dateParty" />
-          <div
-            *ngIf="dateParty.errors && isValidForm != null && !isValidForm"
-            [ngClass]="'error'"
-          >
-            <div *ngIf="dateParty.errors['required']">
-              Fecha es obligatorio.
-            </div>
-          </div>
-        </div>
-        <div class="data-party__input-container">
-          <label>Presupuesto: </label>
-          <input type="number" [formControl]="budget" min="0" />
-          <div
-            *ngIf="budget.errors && isValidForm != null && !isValidForm"
-            [ngClass]="'error'"
-          >
-            <div *ngIf="budget.errors['required']">
-              Presupuesto es obligatorio.
-            </div>
-            <div *ngIf="budget.errors['min']">
-              Presupuesto tiene que ser mayor o igual que 0.
-            </div>
-          </div>
-        </div>
+<mat-stepper linear #stepper>
+  <mat-step [stepControl]="partyDataFormGroup">
+    <form [formGroup]="partyDataFormGroup">
+      <ng-template matStepLabel>Lugar</ng-template>
+      <mat-form-field>
+        <mat-label>Lugar</mat-label>
+        <input matInput formControlName="place" required />
+        <mat-error>Lugar es obligatorio</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Fecha</mat-label>
+        <input
+          matInput
+          [matDatepicker]="dp"
+          formControlName="dateParty"
+          required
+        />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Presupuesto</mat-label>
+        <input
+          matInput
+          formControlName="budget"
+          type="number"
+          min="0"
+          required
+        />
+        <mat-error>Presupuesto es obligatorio</mat-error>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperNext>Siguiente</button>
       </div>
-    </div>
-    <div class="data-people">
-      <h2>Datos de los integrantes:</h2>
-      <span class="subtitle"
-        >Introducir el nombre y el email de los participantes.</span
-      >
-      <span class="subtitle"
-        >Son necesarios 3 personas para hacer el sorteo.</span
-      >
-      <div class="data-people__btn-container">
-        <button
-          class="data-people__btn btn"
-          (click)="addPerson()"
-          mat-raised-button
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="peopleFormGroup">
+    <form [formGroup]="peopleFormGroup">
+      <ng-template matStepLabel>
+        <div>Participantes</div>
+      </ng-template>
+      <div>
+        <button mat-button (click)="addPerson()">Añadir participante</button>
+      </div>
+      <ng-container formArrayName="people">
+        <ng-container
+          *ngFor="let peopleForm of people.controls; let index = index"
         >
-          Añadir más
-        </button>
-      </div>
-      <div class="data-people__data">
-        <ng-container formArrayName="people">
-          <ng-container
-            *ngFor="let peopleForm of people.controls; let index = index"
-          >
-            <div class="data-people__data-form" [formGroupName]="index">
-              <div class="data-people__data-container">
-                <span>{{ index + 1 }}</span>
-                <label>Nombre: </label>
-                <input formControlName="name" type="text" autocomplete="off" />
-                <label>Email: </label>
-                <input formControlName="email" type="text" autocomplete="off" />
-                <button
-                  mat-raised-button
-                  color="warn"
-                  (click)="deletePerson(index)"
-                >
-                  Eliminar
-                </button>
-              </div>
-              <div
-                *ngIf="
-                  people.controls[index].get('name')?.errors &&
-                  isValidForm != null &&
-                  !isValidForm
-                "
-                [ngClass]="'error'"
+          <div class="data-people__data-form" [formGroupName]="index">
+            <div class="data-people__data-container">
+              <span>{{ index + 1 }}</span>
+              <mat-form-field>
+                <mat-label>Nombre</mat-label>
+                <input matInput formControlName="name" />
+                <mat-error>El nombre es obligatorio</mat-error>
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" />
+                <mat-error>El email no es correcto.</mat-error>
+              </mat-form-field>
+              <button
+                mat-raised-button
+                color="warn"
+                (click)="deletePerson(index)"
               >
-                <div
-                  *ngIf="people.controls[index].get('name')?.errors?.['required']"
-                >
-                  Nombre es obligatorio.
-                </div>
-              </div>
-              <div
-                *ngIf="
-                  people.controls[index].get('email')?.errors &&
-                  isValidForm != null &&
-                  !isValidForm
-                "
-                [ngClass]="'error'"
-              >
-                <div
-                  *ngIf="people.controls[index].get('email')?.errors?.['required']"
-                >
-                  Email es obligatorio.
-                </div>
-                <div
-                  *ngIf="people.controls[index].get('email')?.errors?.['pattern']"
-                >
-                  Email no está escrito correctamente.
-                </div>
-              </div>
+                Eliminar
+              </button>
             </div>
-          </ng-container>
+          </div>
         </ng-container>
+      </ng-container>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel>Confirmar información</ng-template>
+    <div class="resume__data">
+      <span
+        >Lugar del evento:
+        <span class="resume__people-data">{{
+          partyDataFormGroup.value.place
+        }}</span></span
+      >
+      <span
+        >Fecha del evento:
+        <span class="resume__people-data">{{
+          partyDataFormGroup.value.dateParty | date
+        }}</span></span
+      >
+      <span
+        >Presupuesto del evento:
+        <span class="resume__people-data">{{
+          partyDataFormGroup.value.budget
+        }}</span></span
+      >
+    </div>
+    <div class="resume__people-container">
+      Participantes:
+      <div *ngFor="let people of people.value" class="resume__people">
+        <span
+          >Nombre:
+          <span class="resume__people-data">{{ people.name }}</span></span
+        >
+        <span
+          >Email:
+          <span class="resume__people-data">{{ people.email }}</span></span
+        >
       </div>
     </div>
-    <input
-      class="btn"
-      mat-raised-button
-      type="submit"
-      color="primary"
-      value="Sortear"
-    />
-  </form>
-</div>
+    <div>
+      <button mat-button (click)="sendData()">Done</button>
+      <button type="button" mat-button (click)="stepper.reset()">Reset</button>
+    </div>
+  </mat-step>
+</mat-stepper>

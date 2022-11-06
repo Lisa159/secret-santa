@@ -6,7 +6,6 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { PartyDataDTO } from '../Models/party-data.dto';
 
 @Component({
   selector: 'app-home',
@@ -14,49 +13,33 @@ import { PartyDataDTO } from '../Models/party-data.dto';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  partyData: PartyDataDTO;
-
-  place: FormControl;
-  dateParty: FormControl;
-  budget: FormControl;
-
-  dataForm: FormGroup;
+  partyDataFormGroup: FormGroup;
+  peopleFormGroup: FormGroup;
 
   isValidForm: boolean | null;
 
-  constructor(private formBuilder: FormBuilder) {
-    this.isValidForm = null;
-
-    this.partyData = new PartyDataDTO('', null, 0, []);
-
-    this.place = new FormControl(this.partyData.place, [
-      Validators.required,
-      Validators.minLength(3),
-    ]);
-    this.dateParty = new FormControl(this.partyData.dateParty, [
-      Validators.required,
-    ]);
-    this.budget = new FormControl(this.partyData.budget, [
-      Validators.required,
-      Validators.min(0),
-    ]);
-
-    this.dataForm = this.formBuilder.group({
-      place: this.place,
-      dateParty: this.dateParty,
-      budget: this.budget,
-      people: this.formBuilder.array([]),
+  constructor(private _formBuilder: FormBuilder) {
+    this.partyDataFormGroup = this._formBuilder.group({
+      place: ['', Validators.required],
+      dateParty: ['', Validators.required],
+      budget: [0, Validators.required],
     });
+
+    this.peopleFormGroup = this._formBuilder.group({
+      people: this._formBuilder.array([]),
+    });
+
+    this.isValidForm = null;
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.addPerson();
     this.addPerson();
     this.addPerson();
   }
 
   get people() {
-    return this.dataForm.controls['people'] as FormArray;
+    return this.peopleFormGroup.controls['people'] as FormArray;
   }
 
   addPerson() {
@@ -65,7 +48,7 @@ export class HomeComponent implements OnInit {
       Validators.required,
       Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$'),
     ]);
-    const peopleForm = this.formBuilder.group({
+    const peopleForm = this._formBuilder.group({
       name: name,
       email: email,
     });
@@ -74,7 +57,7 @@ export class HomeComponent implements OnInit {
   }
 
   deletePerson(index: number) {
-    if (this.dataForm.value.people.length > 3) {
+    if (this.peopleFormGroup.value.people.length > 3) {
       this.people.removeAt(index);
     } else {
       alert('Se necesitan mínimo 3 personas.');
@@ -82,15 +65,9 @@ export class HomeComponent implements OnInit {
   }
 
   sendData(): void {
-    this.isValidForm = false;
-
-    if (this.dataForm.invalid) {
-      alert('Formulario no válido. Existe errores.');
-      return;
-    }
-
-    this.isValidForm = true;
-    const suffleArray = this.sufflePeople(this.dataForm.value.people.length);
+    console.log('this.people.value.length:', this.people.value.length);
+    const suffleArray = this.sufflePeople(this.people.value.length);
+    console.log(suffleArray);
   }
 
   sufflePeople(total: number): number[] {

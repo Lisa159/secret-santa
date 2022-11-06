@@ -94,3 +94,26 @@ form {
     }
   }
 }
+
+.resume {
+  &__data,
+  &__people-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 18px;
+    margin-bottom: 30px;
+  }
+
+  &__people {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    background-color: lavender;
+    border-radius: 6px;
+  }
+
+  &__people-data {
+    font-weight: 700;
+  }
+}
