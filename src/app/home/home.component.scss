@@ -1,0 +1,96 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 1000px;
+  width: 100%;
+
+  label {
+    font-size: 18px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .subtitle {
+    color: rgb(0, 0, 0, 0.7);
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .error {
+    color: red;
+    font-size: 15px;
+  }
+
+  .btn {
+    width: fit-content;
+    align-self: flex-end;
+  }
+
+  input {
+    font-size: 18px;
+  }
+
+  .data-party,
+  .data-people {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: 0 2px 1px -1px #0003, 0 1px 1px #00000024, 0 1px 3px #0000001f;
+    background-color: #fff;
+  }
+
+  .data-party {
+    &__data {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    &__input-container {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+  }
+
+  .data-people {
+    gap: 10px;
+
+    &__btn-container {
+      align-self: flex-end;
+    }
+
+    &__data {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    &__data-form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &__data-container {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+  }
+}

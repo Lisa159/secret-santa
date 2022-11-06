@@ -1,0 +1,38 @@
+header {
+  height: 200px;
+  background-color: lightgrey;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0000;
+  background-image: linear-gradient(#ffffff73, #fff6),
+    url(../assets/images/holiday.jpg);
+  background-position: 50%;
+  background-size: cover;
+  gap: 30px;
+  margin-bottom: 30px;
+
+  h1 {
+    color: #fff;
+    font-size: 50px;
+    margin: 0;
+
+    span {
+      font-weight: 700;
+    }
+  }
+
+  img {
+    width: 100px;
+  }
+}
+
+main {
+  padding: 20px;
+}
+
+footer {
+  height: 50px;
+  background-color: #673ab7;
+  margin-top: 50px;
+}
